@@ -91,7 +91,7 @@ $router->post('/subject/update',[Subject::class,'update'],[AuthMiddleware::class
 $router->get('/subject/delete',[Subject::class,'delete'],[AuthMiddleware::class,AdminMiddleware::class]);
 
 $router->get('/grade',[Grade::class,'index'],[AuthMiddleware::class]);
-$router->get('/grade/supject',[Grade::class,'subject'],[AuthMiddleware::class,StudentMiddleware::class]);
+$router->get('/grade/supject',[Grade::class,'subject'],[AuthMiddleware::class]);
 $router->get('/grade/supject/add',[Grade::class,'add'],[AuthMiddleware::class]);
 $router->post('/grade/insert',[Grade::class,'insert'],[AuthMiddleware::class]);
 

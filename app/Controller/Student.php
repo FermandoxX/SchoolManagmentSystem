@@ -57,6 +57,12 @@ class Student{
         $data = $this->request->getBody();
         $studentData = $this->userModel->getDataById($data['id']);
         $classesData = $this->classModel->getData([]);
+
+        if(!$studentData){
+            setFlashMessage('error','Student dont exist');
+            redirect('/student');
+            exit;
+        }
         
         return view('student/student_profile',['classesData'=>$classesData,'studentData'=>$studentData]);
     }
@@ -64,6 +70,12 @@ class Student{
     public function editPassword(){
         $data = $this->request->getBody();
         $studentData = $this->userModel->getDataById($data['id']);
+
+        if(!$studentData){
+            setFlashMessage('error','Student dont exist');
+            redirect('/student');
+            exit;
+        }
 
         return view('student/student_password',['studentData'=>$studentData]);
     }

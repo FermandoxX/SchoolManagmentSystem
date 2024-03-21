@@ -68,7 +68,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">Students</th>
-                                <?php for($i = 1; $i <= 31; $i++): ?>
+                                <?php for($i = 1; $i <= $day; $i++): ?>
                                     <th scope="col"><?=$i?></th>
                                 <?php endfor; ?>
                             </tr>
@@ -77,12 +77,12 @@
                             <?php foreach($attendancesStudent as $key => $values): ?>
                                 <tr>
                                     <th scope="row" style="width: 88px;"><?=$key?></th>
-                                    <?php for($day = 1; $day <= 31; $day++): ?>
+                                    <?php for($i = 1; $i <= $day; $i++): ?>
                                         <?php $present = false; $attendance = null;?>
                                     
                                         <?php foreach($values as $value): ?>
                                         
-                                            <?php if($day == $value['attendance_date']): ?>
+                                            <?php if($i == $value['attendance_date']): ?>
                                                 <?php $present = true; $attendance = $value['attendance'];?>
                                                 <?php break; ?>
                                             

@@ -39,14 +39,14 @@ class Grade {
         $offset = 0;
         $pattern = [];
         $query = 'inner join classes c on u.class_id = c.class_id';
-
+        
         if(isset($data['search'])){
             $pattern['email'] = $data['search'];
         }
 
         if(isTeacher()){
             $query .= ' inner join subjects s on s.class_id = u.class_id';
-            $condition['teacher_id'] = getUserId();
+            $condition['subject_id'] = $data['subject_id'];
         }
 
         $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern,$query);
@@ -61,17 +61,34 @@ class Grade {
         $offset = 0;
         $pattern = [];
         $query = 'inner join subjects s on s.class_id = u.class_id';
+        if(isset($data['student_id'])){
+            $condition = ['user_id'=>$data['student_id']];
+        }
 
         if(isset($data['search'])){
             $pattern['subject_name'] = $data['search'];
         }
 
-        $pageSum = $this->userModel->pages(['user_id'=>$data['student_id']],$rowPerPage,$pattern,$query);
-        $subjectsData = $this->userModel->pagination(['user_id'=>$data['student_id']],$rowPerPage,$offset,$pattern,$data,$query);
+        if(isTeacher()){
+            $query = 'inner join subjects s on s.teacher_id = u.user_id';
+            $condition = ['user_id'=>$data['teacher_id']];
+        }
 
-        $averageGrade = $this->gradeAverageCalculate($data['student_id']);
+        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern,$query);
+        $subjectsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data,$query);
 
-        return view('grade/grade_subjects',['pages'=>$pageSum,'subjectsData'=>$subjectsData,'data'=>$data,'averageGrade'=>$averageGrade]);
+        if(!$subjectsData){
+            setFlashMessage('error','Student dont exist');
+            redirect('/grade');
+            exit;
+        }
+
+        if(isset($data['student_id'])){
+            $averageGrade = $this->gradeAverageCalculate($data['student_id']);
+            $data['averageGrade'] = $averageGrade;
+        }
+
+        return view('grade/grade_subjects',['pages'=>$pageSum,'subjectsData'=>$subjectsData,'data'=>$data]);
     }
 
     public function add(){
@@ -89,6 +106,12 @@ class Grade {
 
         $gradeData = $this->gradeModel->getData($gradeCondition,[],[],false,$gradeQuery);
         $subjectData = $this->subjectModel->getData($subjectCondition,[],[],false,$query);
+
+        if(!$subjectData){
+            setFlashMessage('error','Grade doesnt exist');
+            redirect('/grade');
+            exit;
+        }
 
         return view('grade/grade_add',['gradeData'=>$gradeData,'subjectData'=>$subjectData,'data'=>$data]);
     }
@@ -127,7 +150,7 @@ class Grade {
         
         $gradeData = $this->gradeModel->getData(['student_id'=>$data['user_id'],'subject_id'=>$data['subject_id']]);
         $subjectData = $this->subjectModel->getData(['subject_id'=>$data['subject_id']],[],[],false,$query);
-// dd($gradeData,$subjectData);
+
         return view('grade/grade_add',['gradeData'=>$gradeData,'subjectData'=>$subjectData,'data'=>$data,'validation'=>$this->validation]);
     }
 

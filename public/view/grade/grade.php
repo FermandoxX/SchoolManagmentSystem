@@ -16,7 +16,7 @@
           <div class="container mb-5 d-flex justify-content-end align-items-center w-100">
             <div class="row height d-flex justify-content-end align-items-center w-75">
               <div class="col-md-8 w-50">
-                <form class="search" method="get" action="/grade">
+                <form class="search" action="/grade">
                    <i class="fa fa-search"></i>
                    <input type="text" name="search" class="form-control" placeholder="Search Now">
                    <button class="btn btn-primary">Search</button>
@@ -85,84 +85,3 @@
     </section>
 
 </main>
-
-
-
-
-            <!-- <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="text-center">#</th>
-                            <th>Name</th>
-                            <th>Job Position</th>
-                            <th>Since</th>
-                            <th class="text-right">Salary</th>
-                            <th class="text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-center">1</td>
-                            <td>Andrew Mike</td>
-                            <td>Develop</td>
-                            <td>2013</td>
-                            <td class="text-right">€ 99,225</td>
-                            <td class="td-actions text-right">
-                                <button type="button" rel="tooltip" class="btn btn-success btn-round btn-just-icon btn-sm" data-original-title="" title="">
-                                    <i class="material-icons">edit</i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-    
-                            <td class="text-center">2</td>
-                            <td>John Doe</td>
-                            <td>Design</td>
-                            <td>2012</td>
-                            <td class="text-right">€ 89,241</td>
-                            <td class="td-actions text-right">
-                                <button type="button" rel="tooltip" class="btn btn-success btn-round btn-just-icon btn-sm" data-original-title="" title="">
-                                    <i class="material-icons">edit</i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-center">3</td>
-                            <td>Alex Mike</td>
-                            <td>Design</td>
-                            <td>2010</td>
-                            <td class="text-right">€ 92,144</td>
-                            <td class="td-actions text-right">
-                                <button type="button" rel="tooltip" class="btn btn-success btn-round btn-just-icon btn-sm" data-original-title="" title="">
-                                    <i class="material-icons">edit</i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-center">4</td>
-                            <td>Mike Monday</td>
-                            <td>Marketing</td>
-                            <td>2013</td>
-                            <td class="text-right">€ 49,990</td>
-                            <td class="td-actions text-right">
-                                <button type="button" rel="tooltip" class="btn btn-success btn-round btn-just-icon btn-sm" data-original-title="" title="">
-                                    <i class="material-icons">edit</i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-center">5</td>
-                            <td>Paul Dickens</td>
-                            <td>Communication</td>
-                            <td>2015</td>
-                            <td class="text-right">€ 69,201</td>
-                            <td class="td-actions text-right">
-                                <button type="button" rel="tooltip" class="btn btn-success btn-round btn-just-icon btn-sm" data-original-title="" title="">
-                                    <i class="material-icons">edit</i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div> -->

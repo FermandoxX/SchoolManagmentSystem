@@ -72,6 +72,12 @@ class Subject {
         $subjectData = $this->subjectModel->getData(['subject_id'=>$data['id']],[],[],false,$query);
         $teachersData = $this->userModel->getData(['role_name'=>'teacher']);
 
+        if(!$subjectData){
+            setFlashMessage('error','Subject dont exist');
+            redirect('/subject');
+            exit;
+        }
+
 
         return view('subject/subject_update',['classesData'=>$classesData,'subjectData'=>$subjectData,'teachersData'=>$teachersData]);
     }
@@ -146,12 +152,6 @@ class Subject {
         if(!$checkingSubject){
             setFlashMessage('error','Subject doesnt exist');
             redirect('/subject');
-            exit;
-        }
-
-        if($data['id'] == getUserId()){
-            setFlashMessage('error',"You can't delete yourself");
-            redirect('/admin');
             exit;
         }
 

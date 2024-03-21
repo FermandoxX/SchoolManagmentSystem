@@ -60,6 +60,12 @@ class Attendance {
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
         $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']],[],[],false,$query);
+
+        if(!$studentsData){
+            setFlashMessage('error','Subject dont exist');
+            redirect('/attendance');
+            exit;
+        }
       
         return view('attendance/attendance_subject',['studentsData'=>$studentsData, 'year'=>$year, 'months'=>$months, 'data'=>$data]);
     }
@@ -67,37 +73,36 @@ class Attendance {
     public function showAttendance(){
         $data = $this->request->getBody();
         $date = strtotime($data['month'].' '.$data['year']);
+        $monthByNumber = date_parse($data['month'])['month'];
         $formattedDate = date('Y-m', $date);
-        $condition = [];
-        $attendancesStudent = [];
+        $attendanceCondition = ['subject_id'=>$data['subject_id']];
         $attendancesQuery = 'inner join users u on u.user_id = a.student_id';
+        $attendancesStudent = [];
         $studentsQuery = 'inner join subjects s on u.class_id = s.class_id';
         $year = date('Y') - 2;
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         $getRules = $this->attendanceModel->attendanceRules();
 
         if(!empty($data['student_id'])){
-            $condition = ['student_id'=>$data['student_id']];
+            $attendanceCondition['student_id'] = $data['student_id'];
         }
 
         if(isStudent()){
-            $condition = ['student_id'=>getUserId()];
+            $attendanceCondition = ['student_id'=>getUserId()];
         }
 
         $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']],[],[],false,$studentsQuery);
 
         if($this->validation->validate($data,$getRules)){
-            $attendancesData = $this->attendanceModel->getData($condition,['attendance_date'=>$formattedDate],[],false,$attendancesQuery);
-    
+            $day = cal_days_in_month(CAL_GREGORIAN, $monthByNumber, $data['year']); 
+
+            $attendancesData = $this->attendanceModel->getData($attendanceCondition,['attendance_date'=>$formattedDate],[],false,$attendancesQuery);
             foreach($attendancesData as $attendanceData){
                 $attendancesStudent[$attendanceData->name.' '.$attendanceData->surename][] = ['attendance_date'=> date("d", strtotime($attendanceData->attendance_date)),'attendance'=>$attendanceData->attendance ];
             }
-
-            return view('attendance/attendance_subject',['attendancesStudent'=>$attendancesStudent,'studentsData'=>$studentsData, 'year'=>$year, 'months'=>$months, 'data'=>$data]);
+            return view('attendance/attendance_subject',['attendancesStudent'=>$attendancesStudent,'studentsData'=>$studentsData, 'year'=>$year, 'months'=>$months, 'day'=>$day, 'data'=>$data]);
         }
-
         return view('attendance/attendance_subject',['validation'=>$this->validation,'studentsData'=>$studentsData, 'year'=>$year, 'months'=>$months, 'data'=>$data]);
-
     }
 
 

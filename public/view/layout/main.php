@@ -358,7 +358,13 @@ $(document).ready(function(){
     <?php endif; ?>
 
     <li class="nav-item">
-      <a class="admin nav-link collapsed" href=<?php echo isStudent() == true ? "/grade/supject?student_id=".getUserId() :"/grade"?>>
+      <?php if(isStudent()): ?>
+        <a class="admin nav-link collapsed" href=<?php echo "/grade/supject?student_id=".getUserId()?>>
+      <?php elseif(isTeacher()): ?>
+        <a class="admin nav-link collapsed" href=<?php echo "/grade/supject?teacher_id=".getUserId()?>>
+      <?php else: ?>
+        <a class="admin nav-link collapsed" href="/grade">
+      <?php endif; ?>
         <i class="bi bi-clipboard-check-fill"></i>
         <span>Grade</span>
       </a>

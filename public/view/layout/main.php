@@ -36,13 +36,15 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8Y+ua7CNiGoA8m6p6D6vuIfq2ZjGfExE5RUg25I2RTepWJz2a9MTGToXbJYO" crossorigin="anonymous"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
 
 <script>
 $(document).ready(function(){
-    $(".success").fadeOut(2500);
-    $(".failed").fadeOut(2500);
+    $("#success").fadeOut(5500);
+    $("#failed").fadeOut(5500);
 });
+
 </script>
 
  <style>
@@ -377,12 +379,10 @@ $(document).ready(function(){
       </a>
     </li>
 
-</ul>
-
 </aside><!-- End Sidebar-->
 
 <?php if(getFlashMessage('success')):?>
-<div class="success alert alert-success alert-white rounded w-25 align-items-center justify-content-center gap-2" style="position: absolute; right: 3%; top: 10%;">
+<div class="success alert alert-success alert-white rounded w-25 align-items-center justify-content-center gap-2" id="success" style="position: absolute; right: 3%; top: 10%;">
     <div class="icon">
         <i class="fa fa-check"></i>
     </div>
@@ -392,7 +392,7 @@ $(document).ready(function(){
 <?php endif; ?>
 
 <?php if(getFlashMessage('error')):?>
-<div class="failed alert alert-danger alert-white rounded w-25 align-items-center justify-content-center gap-2" style="position: absolute; right: 3%; top: 10%; ">
+<div class="failed alert alert-danger alert-white rounded w-25 align-items-center justify-content-center gap-2" id="error" style="position: absolute; right: 3%; top: 10%; ">
     <div class="icon">
         <i class="fa fa-times-circle"></i>
     </div>
@@ -414,17 +414,6 @@ $(document).ready(function(){
   
   <script src="/../view/button/js/jquery-3.3.1.min.js"></script>
   <script src="/../view/button/js/bootstrap.min.js"></script>
-
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <!-- Bootstrap Datepicker JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-
-    <!-- Template Main JS File -->
-
-
-
 
 </body>
 </html>

@@ -21,7 +21,9 @@ use App\Controller\Attendance;
 
 use App\Middleware\AuthMiddleware;
 use App\Middleware\AdminMiddleware;
+use App\Middleware\AdminTeacherMiddleware;
 use App\Middleware\StudentMiddleware;
+use App\Middleware\TeacherMiddleware;
 
 GLOBAL $app;
 
@@ -91,16 +93,16 @@ $router->get('/subject/delete',[Subject::class,'delete'],[AuthMiddleware::class,
 $router->get('/grade',[Grade::class,'index'],[AuthMiddleware::class]);
 $router->get('/grade/supject',[Grade::class,'subject'],[AuthMiddleware::class]);
 $router->get('/grade/supject/add',[Grade::class,'add'],[AuthMiddleware::class]);
-$router->post('/grade/insert',[Grade::class,'insert'],[AuthMiddleware::class]);
+$router->post('/grade/insert',[Grade::class,'insert'],[AuthMiddleware::class,AdminTeacherMiddleware::class]);
 
 $router->get('/attendance',[Attendance::class,'index'],[AuthMiddleware::class]);
 $router->get('/attendance/subject',[Attendance::class,'attendanceSubject'],[AuthMiddleware::class]);
 $router->get('/attendance/students',[Attendance::class,'attendanceStudents'],[AuthMiddleware::class]);
-$router->get('/attendance/add',[Attendance::class,'addAttendance'],[AuthMiddleware::class]);
-$router->post('/attendance/insert',[Attendance::class,'insertAttendance'],[AuthMiddleware::class]);
+$router->get('/attendance/add',[Attendance::class,'addAttendance'],[AuthMiddleware::class,TeacherMiddleware::class]);
+$router->post('/attendance/insert',[Attendance::class,'insertAttendance'],[AuthMiddleware::class,TeacherMiddleware::class]);
 $router->post('/attendance/show',[Attendance::class,'showAttendance'],[AuthMiddleware::class]);
-$router->get('/attendance/remove',[Attendance::class,'removeAttendance'],[AuthMiddleware::class]);
-$router->get('/attendance/delete',[Attendance::class,'deleteAttendance'],[AuthMiddleware::class]);
+$router->get('/attendance/remove',[Attendance::class,'removeAttendance'],[AuthMiddleware::class,AdminTeacherMiddleware::class]);
+$router->get('/attendance/delete',[Attendance::class,'deleteAttendance'],[AuthMiddleware::class,AdminTeacherMiddleware::class]);
 
 $router->run();
 $response->send();

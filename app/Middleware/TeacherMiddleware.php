@@ -2,10 +2,10 @@
 
 namespace App\Middleware;
 
-class StudentMiddleware{
+class TeacherMiddleware{
 
     public function execute() {
-        if (!isStudent()) {
+        if (isTeacher()) {
             setLayout('error');
             echo view('403');
             die;

@@ -69,6 +69,16 @@ class Attendance {
             }
         }
 
+        if(isStudent()){
+            $studentSubjects = $this->subjectModel->studentSubjectsId(getUserId());
+
+            if(!in_array($data['subject_id'],$studentSubjects)){
+                setFlashMessage('error','You do not have permission to view attrndance to other subjects that arent assigned to you');
+                redirect('/attendance');
+                exit;
+            }
+        }
+
         $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']],[],[],false,$query);
 
         if(!$studentsData){

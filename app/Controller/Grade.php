@@ -171,10 +171,10 @@ class Grade {
         $getRules = $this->gradeModel->gradesRule();
         $query = 'inner join classes c on c.class_id = s.class_id
         inner join users u on s.teacher_id = u.user_id';
-        $studentId = $data['user_id'];
+        $studentId = $data['student_id'];
 
         if($this->validation->validate($data,$getRules)){
-            unset($data['user_id']);
+            unset($data['student_id']);
             $data['student_id'] = $studentId;
 
             if($data['grade_id'] == ""){
@@ -185,6 +185,10 @@ class Grade {
 
                 $this->gradeModel->insertData($data);
                 setFlashMessage('success','Grade inserted successfully');
+                if(isTeacher()){
+                    redirect('/grade/supject?teacher_id='.getUserId());
+                    exit;
+                }
                 redirect('/grade/supject?student_id='.$studentId);
                 exit;
             }
@@ -198,7 +202,7 @@ class Grade {
             exit;
         }
         
-        $gradeData = $this->gradeModel->getData(['student_id'=>$data['user_id'],'subject_id'=>$data['subject_id']]);
+        $gradeData = $this->gradeModel->getData(['student_id'=>$data['student_id'],'subject_id'=>$data['subject_id']]);
         $subjectData = $this->subjectModel->getData(['subject_id'=>$data['subject_id']],[],[],false,$query);
 
         return view('grade/grade_add',['gradeData'=>$gradeData,'subjectData'=>$subjectData,'data'=>$data,'validation'=>$this->validation]);

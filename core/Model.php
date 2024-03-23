@@ -36,7 +36,7 @@ class Model extends Validation{
         return $this->fetch();
     }
 
-    public function getData($data = [], $pattern = [], $limit = [], $addJoin = true, $query = null){
+    public function getData($data = [], $pattern = [], $limit = [], $addJoin = true, $query = null,$distinct = []){
         $sql = "select * from $this->tableName {$this->tableName[0]}";   
 
         if($addJoin && $this->join){
@@ -52,10 +52,21 @@ class Model extends Validation{
             }
         }
 
+        if(!empty($distinct)){
+            $columns = '';
+
+            foreach($distinct as $value){
+                $columns .= $value.' ,';
+            }
+            
+            $columns = $this->removeLastWord($columns);
+
+            $sql = str_replace('*','DISTINCT '.$columns,$sql);
+        }
+
         if($query != null){
             $sql .= " $query ";
         }
-
 
         if(!empty($data)){
             $dataCondition = '';

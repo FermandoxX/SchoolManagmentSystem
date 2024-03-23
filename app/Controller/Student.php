@@ -24,13 +24,13 @@ class Student{
     }
 
     public function index(){
-        
         $data = $this->request->getBody();
         $condition = ['role_name'=>'student'];
         $rowPerPage = 5;
         $offset = 0;
         $pattern = [];
         $query = null;
+        $distinct = [];
 
         if(isset($data['search'])){
             $pattern['email'] = $data['search'];
@@ -39,10 +39,13 @@ class Student{
         if(isTeacher()){
             $query = 'inner join subjects s on s.class_id = u.class_id';
             $condition['teacher_id'] = getUserId();
+            $distinct = ['user_id', 'name', 'email', 'password', 'phone_number', 'role_name', 'address', 'image', 'surename'];
         }
 
-        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern,$query);
-        $studentsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data,$query);
+        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern,$query,$distinct);
+        $studentsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data,$query,$distinct);
+
+        // dd((array)$studentsData);
 
         return view('student/student',['pages'=>$pageSum,'studentsData'=>$studentsData,'data'=>$data]);
     }
@@ -185,9 +188,6 @@ class Student{
         redirect('/student');
         exit;
     }
-
-
-
 
 }
 

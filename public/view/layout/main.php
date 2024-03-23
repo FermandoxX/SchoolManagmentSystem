@@ -332,7 +332,7 @@ $(document).ready(function(){
       </a>
     </li>
 
-    <?php if(isAdmin()): ?>
+    <?php if(isAdmin() || isTeacher()): ?>
       <li class="nav-item">
         <a class="admin nav-link collapsed" href="/student">
           <i class="bi bi-people-fill"></i>

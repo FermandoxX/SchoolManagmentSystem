@@ -35,11 +35,13 @@
                       <h3><?php echo strlen($studentData->name.' '.$studentData->surename) < 15 ? $studentData->name.' '.$studentData->surename : substr($studentData->name.' '.$studentData->surename,0,12).'...' ?></h3>
                       <h6><?php echo "Email: "; echo strlen($studentData->email) < 20 ? ucfirst($studentData->email) : substr($studentData->email,0,17).'...' ?></h6>
                       <h6><?php echo "Address: ". $studentData->address ?></h6>
+                      <?php if(isAdmin()): ?>
                       <?php if($studentData->user_id != getUserId()): ?>
                       <div class="d-flex gap-2">
                         <a class="editDeleteButton mb-3 mr-3 bg-success text-white" href="student/profile?id=<?php echo $studentData->user_id;?>">Edit</a>
                         <a class="editDeleteButton mb-3 mr-3 bg-danger text-white"  href="student/delete?id=<?php echo $studentData->user_id;?>">Delete</a>
                       </div>
+                      <?php endif; ?> 
                       <?php endif; ?> 
                     </div>
                   </div>

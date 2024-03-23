@@ -64,7 +64,7 @@ $router->get('/teacher/password',[Teacher::class,'editPassword'],[AuthMiddleware
 $router->post('/teacher/password/update',[Teacher::class,'updatePassword'],[AuthMiddleware::class,AdminMiddleware::class]);
 $router->get('/teacher/delete',[Teacher::class,'delete'],[AuthMiddleware::class,AdminMiddleware::class]);
 
-$router->get('/student',[Student::class,'index'],[AuthMiddleware::class,AdminMiddleware::class]);
+$router->get('/student',[Student::class,'index'],[AuthMiddleware::class]);
 $router->get('/student/create',[Student::class,'add'],[AuthMiddleware::class,AdminMiddleware::class]);
 $router->post('/student/create',[Student::class,'create'],[AuthMiddleware::class,AdminMiddleware::class]);
 $router->get('/student/profile',[Student::class,'edit'],[AuthMiddleware::class,AdminMiddleware::class]);
@@ -72,8 +72,6 @@ $router->post('/student/profile/update',[Student::class,'updateProfile'],[AuthMi
 $router->get('/student/password',[Student::class,'editPassword'],[AuthMiddleware::class,AdminMiddleware::class]);
 $router->post('/student/password/update',[Student::class,'updatePassword'],[AuthMiddleware::class,AdminMiddleware::class]);
 $router->get('/student/delete',[Student::class,'delete'],[AuthMiddleware::class,AdminMiddleware::class]);
-
-
 
 $router->get('/class',[Classes::class,'index'],[AuthMiddleware::class]);
 $router->post('/class',[Classes::class,'index'],[AuthMiddleware::class,AdminMiddleware::class]);
@@ -103,11 +101,6 @@ $router->post('/attendance/insert',[Attendance::class,'insertAttendance'],[AuthM
 $router->post('/attendance/show',[Attendance::class,'showAttendance'],[AuthMiddleware::class]);
 $router->get('/attendance/remove',[Attendance::class,'removeAttendance'],[AuthMiddleware::class]);
 $router->get('/attendance/delete',[Attendance::class,'deleteAttendance'],[AuthMiddleware::class]);
-
-
-
-
-
 
 $router->run();
 $response->send();

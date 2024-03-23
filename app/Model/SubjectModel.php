@@ -46,5 +46,45 @@ class SubjectModel extends Model{
         return $data;
     }
 
+    public function teacherSubjectsId($teacherId){
+        $subjectsId = [];
+        $teacherSubjects = $this->getData(['teacher_id'=>$teacherId]);
+
+        foreach($teacherSubjects as $teacherSubject){
+            $subjectsId[] = $teacherSubject->subject_id;
+        }
+
+        return $subjectsId;
+    }
+
+    public function teacherStudentsId($teacherId,$subject_id){
+        $studentsId = [];
+        $query = 'inner join users u on u.class_id = s.class_id';
+
+        $teacherStudents = $this->getData(['teacher_id'=>$teacherId,'subject_id'=>$subject_id],[],[],false,$query);
+
+        foreach($teacherStudents as $teacherStudent){
+            $studentsId[] = $teacherStudent->user_id;
+        }
+
+        $studentsId = array_unique($studentsId);
+
+        return $studentsId;
+    }
+
+    public function studentSubjectsId($studentId){
+        $studentsId = [];
+        $query = 'inner join users u on u.class_id = s.class_id';
+
+        $studentSubjects = $this->getData(['user_id'=>$studentId],[],[],false,$query);
+
+        foreach($studentSubjects as $studentSubject){
+            $studentsId[] = $studentSubject->subject_id;
+        }
+
+        $studentsId = array_unique($studentsId);
+
+        return $studentsId;
+    }
 
 }

@@ -32,7 +32,6 @@ class Grade {
     }
 
     public function index(){
-        
         $data = $this->request->getBody();
         $condition = ['role_name'=>'student'];
         $rowPerPage = 5;
@@ -45,6 +44,14 @@ class Grade {
         }
 
         if(isTeacher()){
+            $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
+
+            if(!in_array($data['subject_id'],$teacherSubjectsId)){
+                setFlashMessage('error','You do not have permission to view students assigned to other teachers');
+                redirect('/grade/supject?teacher_id='.getUserId());
+                exit;
+            }
+
             $query .= ' inner join subjects s on s.class_id = u.class_id';
             $condition['subject_id'] = $data['subject_id'];
         }
@@ -69,7 +76,21 @@ class Grade {
             $pattern['subject_name'] = $data['search'];
         }
 
+        if(isStudent()){
+            if(getUserId() != $data['student_id']){
+                setFlashMessage('error','You do not have permission to view subjects assigned to other students');
+                redirect('/grade/supject?student_id='.getUserId());
+                exit;
+            }
+        }
+
         if(isTeacher()){
+            if(getUserId() != $data['teacher_id']){
+                setFlashMessage('error','You do not have permission to view subjects assigned to other teachers');
+                redirect('/grade/supject?teacher_id='.getUserId());
+                exit;
+            }
+
             $query = 'inner join subjects s on s.teacher_id = u.user_id';
             $condition = ['user_id'=>$data['teacher_id']];
         }
@@ -96,22 +117,51 @@ class Grade {
         $gradeQuery = 'inner join subjects s on g.subject_id = s.subject_id';
         $query = 'inner join classes c on c.class_id = s.class_id
         inner join users u on s.teacher_id = u.user_id';
-        $gradeCondition = isset($data['subject_id']) ? ['student_id'=>$data['user_id'],'s.subject_id'=>$data['subject_id']] : [];
+        $gradeCondition = isset($data['subject_id']) ? ['student_id'=>$data['student_id'],'s.subject_id'=>$data['subject_id']] : [];
         $subjectCondition = isset($data['subject_id']) ? ['s.subject_id'=>$data['subject_id']] : [];
 
-        if(isTeacher()){ 
-            $gradeCondition = ['student_id'=>$data['student_id'],'teacher_id'=>$data['teacher_id']];
-            $subjectCondition = ['teacher_id'=>$data['teacher_id']];
+        if(isTeacher()){
+            $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
+
+            if(!in_array($data['subject_id'],$teacherSubjectsId)){
+                setFlashMessage('error','You do not have permission to add grades at subjects who are not assigned to you');
+                redirect('/grade/supject?teacher_id='.getUserId());
+                exit;
+            }
+
+            if(getUserId() != $data['teacher_id']){
+                setFlashMessage('error','You do not have permission to add grades for other teachers');
+                redirect('/grade/supject?teacher_id='.getUserId());
+                exit;
+            }   
+
+            $teacherStudentsId = $this->subjectModel->teacherStudentsId(getUserId(),$data['subject_id']);
+
+            if(!in_array($data['student_id'],$teacherStudentsId)){
+                setFlashMessage('error','You do not have permission to grade students who are not assigned to you or arent in this class');
+                redirect('/grade/supject?teacher_id='.getUserId());
+                exit;
+            }
+        }
+
+        if(isStudent()){
+            if(getUserId() != $data['student_id']){
+                setFlashMessage('error','You do not have permission to view grades assigned to other students');
+                redirect('/grade/supject?student_id='.getUserId());
+                exit;
+            }
+
+            $studentSubjects = $this->subjectModel->studentSubjectsId(getUserId());
+
+            if(!in_array($data['subject_id'],$studentSubjects)){
+                setFlashMessage('error','You do not have permission to view grades assigned to other subjects');
+                redirect('/grade/supject?student_id='.getUserId());
+                exit;
+            }
         }
 
         $gradeData = $this->gradeModel->getData($gradeCondition,[],[],false,$gradeQuery);
         $subjectData = $this->subjectModel->getData($subjectCondition,[],[],false,$query);
-
-        if(!$subjectData){
-            setFlashMessage('error','Grade doesnt exist');
-            redirect('/grade');
-            exit;
-        }
 
         return view('grade/grade_add',['gradeData'=>$gradeData,'subjectData'=>$subjectData,'data'=>$data]);
     }

@@ -59,6 +59,16 @@ class Attendance {
         $year = date('Y') - 2;
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+        if(isTeacher()){
+            $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
+
+            if(!in_array($data['subject_id'],$teacherSubjectsId)){
+                setFlashMessage('error','You do not have permission to add attendance at subjects who are not assigned to you');
+                redirect('/attendance');
+                exit;
+            }
+        }
+
         $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']],[],[],false,$query);
 
         if(!$studentsData){
@@ -114,6 +124,16 @@ class Attendance {
         $offset = 0;
         $pattern = [];
 
+        if(isTeacher()){
+            $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
+
+            if(!in_array($data['subject_id'],$teacherSubjectsId)){
+                setFlashMessage('error','You do not have permission to add attendance at subjects who are not assigned to you');
+                redirect('/attendance');
+                exit;
+            }
+        }
+
         if(isset($data['search'])){
             $pattern['name'] = $data['search'];
         }
@@ -126,6 +146,24 @@ class Attendance {
 
     public function addAttendance(){
         $data = $this->request->getBody();
+
+        if(isTeacher()){
+            $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
+
+            if(!in_array($data['subject_id'],$teacherSubjectsId)){
+                setFlashMessage('error','You do not have permission to add attendance at subjects who are not assigned to you');
+                redirect('/attendance');
+                exit;
+            }
+            
+            $teacherStudentsId = $this->subjectModel->teacherStudentsId(getUserId(),$data['subject_id']);
+
+            if(!in_array($data['student_id'],$teacherStudentsId)){
+                setFlashMessage('error','You do not have permission to add attendance students who are not assigned to you or arent in this class');
+                redirect('/attendance');
+                exit;
+            }
+        }
 
         return view('attendance/attendance_add',['data'=>$data]);
     }

@@ -6,8 +6,8 @@ use Core\Response;
 
 class Router{
 
-   public $request;
-   public $response;
+   public Request $request;
+   public Response $response;
    protected $routes = [];
 
    public function __construct(Request $request, Response $response)
@@ -50,8 +50,7 @@ class Router{
          }
       }
 
-      $callback[0] = app()->get($callback[0]);  
-
+      $callback[0] = app()->get($callback[0]); 
       return call_user_func($callback);
    }
 

@@ -77,7 +77,6 @@ class Validation {
             if($ruleName === self::RULE_PHONENUMBER && !preg_match("/^(068|069|067)\d{7}$/", $value)){
               $this->addErrorForRule($attribute,self::RULE_PHONENUMBER);
             }
-           
 
             if($ruleName === self::RULE_IMAGE && $value['name'] != ""){
               
@@ -138,7 +137,6 @@ class Validation {
             self::RULE_PHONENUMBER => 'Invalid phone number',
             self::RULE_IMAGE => 'Unsupported file format. Please upload a photo in either .jpg, .jpeg, or .png format.',
             self::RULE_GRADES => 'Grades need to be between 4 and 10'
-
         ];
       }
       

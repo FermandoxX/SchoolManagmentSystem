@@ -92,9 +92,11 @@ class Attendance {
 
     public function showAttendance(){
         $data = $this->request->getBody();
+
         $date = strtotime($data['month'].' '.$data['year']);
         $monthByNumber = date_parse($data['month'])['month'];
         $formattedDate = date('Y-m', $date);
+        
         $attendanceCondition = ['subject_id'=>$data['subject_id']];
         $attendancesQuery = 'inner join users u on u.user_id = a.student_id';
         $attendancesStudent = [];

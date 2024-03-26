@@ -13,7 +13,10 @@ class Main {
     }
 
     public function index(){
-        
-        return view('main');
+        $adminNumber = count($this->userModel->getData(['role_name'=>'admin']));
+        $teacherNumber = count($this->userModel->getData(['role_name'=>'teacher']));
+        $studentNumber = count($this->userModel->getData(['role_name'=>'student']));
+
+        return view('main',['adminNumber'=>$adminNumber,'teacherNumber'=>$teacherNumber,'studentNumber'=>$studentNumber]);
     }
 }

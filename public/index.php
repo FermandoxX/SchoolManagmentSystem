@@ -100,7 +100,7 @@ $router->get('/attendance/subject',[Attendance::class,'attendanceSubject'],[Auth
 $router->get('/attendance/students',[Attendance::class,'attendanceStudents'],[AuthMiddleware::class]);
 $router->get('/attendance/add',[Attendance::class,'addAttendance'],[AuthMiddleware::class,TeacherMiddleware::class]);
 $router->post('/attendance/insert',[Attendance::class,'insertAttendance'],[AuthMiddleware::class,TeacherMiddleware::class]);
-$router->post('/attendance/show',[Attendance::class,'showAttendance'],[AuthMiddleware::class]);
+$router->post('/attendance/show',[Attendance::class,'showAttendance'],[AuthMiddleware::class,]);
 $router->get('/attendance/remove',[Attendance::class,'removeAttendance'],[AuthMiddleware::class,AdminTeacherMiddleware::class]);
 $router->get('/attendance/delete',[Attendance::class,'deleteAttendance'],[AuthMiddleware::class,AdminTeacherMiddleware::class]);
 

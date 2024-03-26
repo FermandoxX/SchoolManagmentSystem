@@ -392,7 +392,7 @@ $(document).ready(function(){
 <?php endif; ?>
 
 <?php if(getFlashMessage('error')):?>
-<div class="failed alert alert-danger alert-white rounded w-25 align-items-center justify-content-center gap-2" id="error" style="position: absolute; right: 3%; top: 10%; ">
+<div class="failed alert alert-danger alert-white rounded w-25 align-items-center justify-content-center gap-2" id="failed" style="position: absolute; right: 3%; top: 10%; ">
     <div class="icon">
         <i class="fa fa-times-circle"></i>
     </div>
@@ -414,6 +414,9 @@ $(document).ready(function(){
   
   <script src="/../view/button/js/jquery-3.3.1.min.js"></script>
   <script src="/../view/button/js/bootstrap.min.js"></script>
+
+  <!-- Bootstrap Datepicker JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
 </body>
 </html>

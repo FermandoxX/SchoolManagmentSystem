@@ -23,7 +23,7 @@
                       <i class="bi bi-person-fill"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>145</h6>
+                      <h6><?= $adminNumber ?></h6>
                     </div>
                   </div>
                 </div>
@@ -42,7 +42,7 @@
                       <i class="bi bi-person-video3"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>3,264</h6>
+                      <h6><?= $teacherNumber ?></h6>
                     </div>
                   </div>
                 </div>
@@ -61,7 +61,7 @@
                       <i class="bi bi-people-fill"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>1244</h6>
+                      <h6><?= $studentNumber ?></h6>
                     </div>
                   </div>
 
@@ -198,73 +198,13 @@
 
               </div>
             </div><!-- End Recent Sales -->
+            
           </div>
         </div><!-- End Left side columns -->
 
         <!-- Right side columns -->
         <div class="col-lg-4">
-          <!-- Budget Report -->
-          <div class="card">
-            <div class="card-body pb-0">
-              <h5 class="card-title">Budget Report <span>| This Month</span></h5>
-
-              <div id="budgetChart" style="min-height: 400px;" class="echart"></div>
-
-              <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                  var budgetChart = echarts.init(document.querySelector("#budgetChart")).setOption({
-                    legend: {
-                      data: ['Allocated Budget', 'Actual Spending']
-                    },
-                    radar: {
-                      // shape: 'circle',
-                      indicator: [{
-                          name: 'Sales',
-                          max: 6500
-                        },
-                        {
-                          name: 'Administration',
-                          max: 16000
-                        },
-                        {
-                          name: 'Information Technology',
-                          max: 30000
-                        },
-                        {
-                          name: 'Customer Support',
-                          max: 38000
-                        },
-                        {
-                          name: 'Development',
-                          max: 52000
-                        },
-                        {
-                          name: 'Marketing',
-                          max: 25000
-                        }
-                      ]
-                    },
-                    series: [{
-                      name: 'Budget vs spending',
-                      type: 'radar',
-                      data: [{
-                          value: [4200, 3000, 20000, 35000, 50000, 18000],
-                          name: 'Allocated Budget'
-                        },
-                        {
-                          value: [5000, 14000, 28000, 26000, 42000, 21000],
-                          name: 'Actual Spending'
-                        }
-                      ]
-                    }]
-                  });
-                });
-              </script>
-
-            </div>
-          </div><!-- End Budget Report -->
-
-          <!-- Website Traffic -->
+          <!-- End Budget Report -->
           <div class="card">
             <div class="card-body pb-0">
               <h5 class="card-title">Website Traffic</span></h5>
@@ -327,24 +267,7 @@
               </script>
 
             </div>
-          </div><!-- End Website Traffic -->
-
-          <!-- News & Updates Traffic -->
-          <div class="card">
-            <div class="filter">
-              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <li class="dropdown-header text-start">
-                  <h6>Filter</h6>
-                </li>
-
-                <li><a class="dropdown-item" href="#">Today</a></li>
-                <li><a class="dropdown-item" href="#">This Month</a></li>
-                <li><a class="dropdown-item" href="#">This Year</a></li>
-              </ul>
-            </div>
-          </div><!-- End News & Updates -->
-
+          </div><!-- End Website Traffic -->  
         </div><!-- End Right side columns -->
 
       </div>

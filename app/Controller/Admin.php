@@ -42,6 +42,29 @@ class Admin{
         return view('admin/admin_create');
     }
 
+    public function create(){
+        $createUserData = $this->request->getBody();
+        $getRules = $this->userModel->createRules();
+        $image = $createUserData['image'];
+
+        if($this->validation->validate($createUserData,$getRules,$this->userModel)){
+            unset($createUserData['image']);
+            if(isset($image['name']) && $image['name'] != ""){
+                moveUploadedImage($image);
+                $createUserData['image'] = $image['name'];
+            }
+
+            $createUserData['role_name'] = 'admin';
+            $createUserData['password'] = password_hash($createUserData['password'], PASSWORD_DEFAULT);
+            
+            $this->userModel->insertData($createUserData);
+            setFlashMessage('success','Admin created successfully');
+            redirect('/admin');
+            exit;
+        }
+        return view('admin/admin_create',['validation'=>$this->validation]);
+    }
+
     public function edit(){
         
         $data = $this->request->getBody();
@@ -70,28 +93,7 @@ class Admin{
         return view('admin/admin_password',['userData'=>$userData]);
     }
 
-    public function create(){
-        $createUserData = $this->request->getBody();
-        $getRules = $this->userModel->createRules();
-        $image = $createUserData['image'];
 
-        if($this->validation->validate($createUserData,$getRules,$this->userModel)){
-            unset($createUserData['image']);
-            if(isset($image['name']) && $image['name'] != ""){
-                moveUploadedImage($image);
-                $createUserData['image'] = $image['name'];
-            }
-
-            $createUserData['role_name'] = 'admin';
-            $createUserData['password'] = password_hash($createUserData['password'], PASSWORD_DEFAULT);
-            
-            $this->userModel->insertData($createUserData);
-            setFlashMessage('success','Admin created successfully');
-            redirect('/admin');
-            exit;
-        }
-        return view('admin/admin_create',['validation'=>$this->validation]);
-    }
 
     public function updateProfile(){
         $data = $this->request->getBody();

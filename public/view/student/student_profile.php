@@ -93,24 +93,7 @@
                     <div class = "invalid-feedback"><?php echo isset($params['validation']) ? $params['validation']->getFirstError('email') : ' '?></div>
                   </div>
                 </div>
-
-                <div class="row mb-3">
-                    <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Classes</label>
-                    <div class="col-md-8 col-lg-9">
-                        <select name='class_id' class="form-select <?php echo isset($params['validation']) && $params['validation']->hasError('class_id') ? ' is-invalid' : ' ';  ?>" id="floatingSelect">
-                            <option selected=""></option>
-                            <?php foreach($classesData as $classData): ?>
-                                <option value=<?=$classData->class_id?>>
-                                    <?=$classData->class_name?>
-                                </option>
-                                <?php endforeach; ?>
-                        </select>
-                        <div class="invalid-feedback">
-                            <?php echo isset($params['validation']) ? $params['validation']->getFirstError('class_id') : ' '?>
-                        </div>
-                    </div>
-                </div>
-
+                
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>

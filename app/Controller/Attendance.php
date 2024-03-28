@@ -7,6 +7,7 @@ use App\Model\UserModel;
 use Core\Request;
 use Core\Response;
 use Core\Validation;
+use PDO;
 
 class Attendance {
 
@@ -63,7 +64,7 @@ class Attendance {
             $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
 
             if(!in_array($data['subject_id'],$teacherSubjectsId)){
-                setFlashMessage('error','You do not have permission to add attendance at subjects who are not assigned to you');
+                setFlashMessage('error','You do not have permission to view attendance at subjects who are not assigned to you');
                 redirect('/attendance');
                 exit;
             }
@@ -73,7 +74,7 @@ class Attendance {
             $studentSubjects = $this->subjectModel->studentSubjectsId(getUserId());
 
             if(!in_array($data['subject_id'],$studentSubjects)){
-                setFlashMessage('error','You do not have permission to view attrndance to other subjects that arent assigned to you');
+                setFlashMessage('error','You do not have permission to view attendance to other subjects that arent assigned to you');
                 redirect('/attendance');
                 exit;
             }
@@ -116,45 +117,22 @@ class Attendance {
         $studentsData = $this->userModel->getData(['role_name'=>'student','subject_id'=>$data['subject_id']],[],[],false,$studentsQuery);
 
         if($this->validation->validate($data,$getRules)){
+            $days = [];
             $day = cal_days_in_month(CAL_GREGORIAN, $monthByNumber, $data['year']); 
+
+            for($i = 1;$i <= $day;$i ++){
+                $days[]=$i;
+            }
 
             $attendancesData = $this->attendanceModel->getData($attendanceCondition,['attendance_date'=>$formattedDate],[],false,$attendancesQuery);
             foreach($attendancesData as $attendanceData){
-                $attendancesStudent[$attendanceData->name.' '.$attendanceData->surename][] = ['attendance_date'=> date("d", strtotime($attendanceData->attendance_date)),'attendance'=>$attendanceData->attendance ];
+                $attendancesStudent[$attendanceData->name.' '.$attendanceData->surename][] = (int)date("d", strtotime($attendanceData->attendance_date));
             }
-            return view('attendance/attendance_subject',['attendancesStudent'=>$attendancesStudent,'studentsData'=>$studentsData, 'year'=>$year, 'months'=>$months, 'day'=>$day, 'data'=>$data]);
+            return view('attendance/attendance_subject',['attendancesStudent'=>$attendancesStudent,'studentsData'=>$studentsData, 'year'=>$year, 'months'=>$months, 'days'=>$days, 'data'=>$data]);
         }
         return view('attendance/attendance_subject',['validation'=>$this->validation,'studentsData'=>$studentsData, 'year'=>$year, 'months'=>$months, 'data'=>$data]);
     }
 
-
-    public function attendanceStudents(){    
-        $data = $this->request->getBody();
-        $query = 'inner join subjects s on u.class_id = s.class_id';
-        $condition = ['subject_id' => $data['subject_id']];
-        $rowPerPage = 5;
-        $offset = 0;
-        $pattern = [];
-
-        if(isTeacher()){
-            $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
-
-            if(!in_array($data['subject_id'],$teacherSubjectsId)){
-                setFlashMessage('error','You do not have permission to add attendance at subjects who are not assigned to you');
-                redirect('/attendance');
-                exit;
-            }
-        }
-
-        if(isset($data['search'])){
-            $pattern['name'] = $data['search'];
-        }
-
-        $pageSum = $this->userModel->pages($condition,$rowPerPage,$pattern,$query);
-        $studentsData = $this->userModel->pagination($condition,$rowPerPage,$offset,$pattern,$data,$query);
-
-        return view('attendance/attendance_students',['pages'=>$pageSum,'studentsData'=>$studentsData,'data'=>$data]);
-    }
 
     public function addAttendance(){
         $data = $this->request->getBody();
@@ -167,44 +145,79 @@ class Attendance {
                 redirect('/attendance');
                 exit;
             }
-            
-            $teacherStudentsId = $this->subjectModel->teacherStudentsId(getUserId(),$data['subject_id']);
-
-            if(!in_array($data['student_id'],$teacherStudentsId)){
-                setFlashMessage('error','You do not have permission to add attendance students who are not assigned to you or arent in this class');
-                redirect('/attendance');
-                exit;
-            }
         }
 
-        return view('attendance/attendance_add',['data'=>$data]);
+        $query = 'inner join subjects s on u.class_id = s.class_id';
+        $studentsData = $this->userModel->getData(['subject_id'=>$data['subject_id']],[],[],false,$query);
+
+        return view('attendance/attendance_add',['data'=>$data,'studentsData'=>$studentsData]);
     }
 
     public function insertAttendance(){
         $data = $this->request->getBody();
         $getRules = $this->attendanceModel->attendanceRules();
+        $query = 'inner join subjects s on u.class_id = s.class_id';
+        $studentsData = $this->userModel->getData(['subject_id'=>$data['subject_id']],[],[],false,$query);
 
-        if($this->validation->validate($data,$getRules)){
-            $date = strtotime($data['attendance_date']);
-            $date = date('Y-m-d', $date);
-            $data['attendance_date'] = $date;
-            
-            $this->attendanceModel->insertData($data);
-            setFlashMessage('success','Attendance inserted successfully');
-            redirect("/attendance/students?subject_id=".$data['subject_id']);
+        if(!isset($data['checkbox'])){
+            setFlashMessage('error','Choose a student to add a attendance');
+            redirect("/attendance/add?subject_id=".$data['subject_id']);
             exit;
         }
-        return view('attendance/attendance_add',['validation'=>$this->validation,'data'=>$data]);
+
+        if($this->validation->validate($data,$getRules)){ 
+
+            if($this->attendanceModel->existAttendance($data)['value']){
+                foreach($data['checkbox'] as $studentId){
+                    $date = strtotime($data['attendance_date']);
+                    $date = date('Y-m-d', $date);
+                    $data['attendance_date'] = $date;
+                    $data['student_id'] = $studentId;
+                    unset($data['checkbox']);
+                    $this->attendanceModel->insertData($data);
+                }
+                setFlashMessage('success','Attendance inserted successfully');
+                redirect("/attendance/add?subject_id=".$data['subject_id']);
+                exit;
+            }
+            $studentId = $this->attendanceModel->existAttendance($data)['studentId'];
+            $studentData = $this->userModel->getDataById($studentId);
+            $studentName = $studentData->name .' '. $studentData->surename;
+            setFlashMessage('error',"Attendance already exists for this date at student $studentName");
+            redirect("/attendance/add?subject_id=".$data['subject_id']);
+            exit;
+        }
+        return view('attendance/attendance_add',['validation'=>$this->validation,'data'=>$data,'studentsData'=>$studentsData]);
     }
 
     public function removeAttendance(){
         $data = $this->request->getBody();
+        $rowPerPage = 5;
+        $offset = 0;
         $query = 'inner join users u on u.user_id = a.student_id';
-        $condition = ['student_id'=>$data['student_id'],'subject_id'=>$data['subject_id']];
+        $condition = ['subject_id'=>$data['subject_id']];
+        $pattern = [];
 
-        $attendancesData = $this->attendanceModel->getData($condition,[],[],false,$query);
+        if(isTeacher()){
+            $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
 
-        return view('attendance/attendance_remove',['attendancesData'=>$attendancesData,'data'=>$data]);
+            if(!in_array($data['subject_id'],$teacherSubjectsId)){
+                setFlashMessage('error','You do not have permission to view attendance at subjects who are not assigned to you');
+                redirect('/attendance');
+                exit;
+            }
+        }
+
+        if(isset($data['search'])){
+            $pattern['name'] = $data['search'];
+            $pattern['surename'] = $data['search'];
+            $pattern['attendance_date'] = $data['search'];
+        }
+
+        $pageSum = $this->attendanceModel->pages($condition,$rowPerPage,$pattern,$query);
+        $attendancesData = $this->attendanceModel->pagination($condition,$rowPerPage,$offset,$pattern,$data,$query);
+
+        return view('attendance/attendance_remove',['pages'=>$pageSum,'attendancesData'=>$attendancesData,'data'=>$data]);
     }
 
     public function deleteAttendance(){
@@ -213,13 +226,23 @@ class Attendance {
 
         if(!$checkingAttendance){
             setFlashMessage('error','Attendance dont exist');
-            redirect('/attendance/students?subject_id='.$data['subject_id']);
+            redirect('/attendance/remove?subject_id='.$data['subject_id']);
             exit;
+        }
+        
+        if(isTeacher()){
+            $teacherSubjectsId = $this->subjectModel->teacherSubjectsId(getUserId());
+
+            if(!in_array($data['subject_id'],$teacherSubjectsId)){
+                setFlashMessage('error','You do not have permission to delete attendance at subjects who are not assigned to you');
+                redirect('/attendance');
+                exit;
+            }
         }
 
         $this->attendanceModel->deleteData($data['attendance_id']);
         setFlashMessage('success','Attendance deleted successfully');
-        redirect("/attendance/students?subject_id=".$data['subject_id']);
+        redirect("/attendance/remove?subject_id=".$data['subject_id']);
 
     }
 

@@ -86,7 +86,7 @@ class Model extends Validation{
             $patternCondition = '';
 
             foreach($pattern as $columnsNames => $columnsValues){
-                $patternCondition .= " $columnsNames like :".$columnsNames." and ";
+                $patternCondition .= " $columnsNames like :".$columnsNames." or ";
             }
             $patternCondition = $this->removeLastWord($patternCondition);
 

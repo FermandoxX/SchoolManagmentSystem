@@ -15,6 +15,18 @@ class ClassModel extends Model {
         ];
     }
 
+    public function teacherClasses(){
+      $classId = [];
+      $query = 'inner join subjects s on s.class_id = c.class_id';
+      $classes = $this->getData(['teacher_id'=>getUserId()],[],[],false,$query);
+
+      foreach($classes as $class){
+        $classId[] = $class->class_id;
+      }
+
+      $classId = array_unique($classId);
+      return $classId;
+    }
 
     public function pages($condition = [],$rowsPerPage,$pattern = []){
       $numberOfRows = count($this->getData($condition,$pattern));

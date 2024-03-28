@@ -259,15 +259,90 @@
                         {
                           value: 300,
                           name: 'Video Ads'
+                        },
+                        {
+                          value: 300,
+                          name: 'idks'
                         }
                       ]
                     }]
                   });
                 });
               </script>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Pie Chart</h5>
+
+              <!-- Pie Chart -->
+              <div id="pieChart" style="min-height: 400px; user-select: none; position: relative;" class="echart" _echarts_instance_="ec_1711632038075"><div style="position: relative; width: 536px; height: 400px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;"><canvas style="position: absolute; left: 0px; top: 0px; width: 536px; height: 400px; user-select: none; padding: 0px; margin: 0px; border-width: 0px;" data-zr-dom-id="zr_0" width="670" height="500"></canvas></div><div class="" style="position: absolute; display: block; border-style: solid; white-space: nowrap; z-index: 9999999; box-shadow: rgba(0, 0, 0, 0.2) 1px 2px 10px; transition: opacity 0.2s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.2s cubic-bezier(0.23, 1, 0.32, 1), transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); background-color: rgb(255, 255, 255); border-width: 1px; border-radius: 4px; color: rgb(102, 102, 102); font: 14px / 21px Microsoft YaHei; padding: 10px; top: 0px; left: 0px; transform: translate3d(226px, 160px, 0px); border-color: rgb(238, 102, 102); pointer-events: none; visibility: hidden; opacity: 0;"><div style="margin: 0px 0 0;line-height:1;"><div style="font-size:14px;color:#666;font-weight:400;line-height:1;">Access From</div><div style="margin: 10px 0 0;line-height:1;"><div style="margin: 0px 0 0;line-height:1;"><span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#ee6666;"></span><span style="font-size:14px;color:#666;font-weight:400;margin-left:2px">Union Ads</span><span style="float:right;margin-left:20px;font-size:14px;color:#666;font-weight:900">484</span><div style="clear:both"></div></div><div style="clear:both"></div></div><div style="clear:both"></div></div></div></div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  echarts.init(document.querySelector("#pieChart")).setOption({
+                    tooltip: {
+                      trigger: 'item'
+                    },
+                    legend: {
+                      orient: 'vertical',
+                      left: 'left',
+                      bottom: 1 
+                    },
+                    series: [{
+                      name: 'Access From',
+                      type: 'pie',
+                      radius: '50%',
+                      top: -200,
+                      data: [{
+                          value: 1048,
+                          name: 'Search Engine'
+                        },
+                        {
+                          value: 735,
+                          name: 'Direct'
+                        },
+                        {
+                          value: 580,
+                          name: 'Email'
+                        },
+                        {
+                          value: 484,
+                          name: 'Union Ads'
+                        },
+                        {
+                          value: 300,
+                          name: 'asdewf Adsfads'
+                        },
+                        {
+                          value: 300,
+                          name: 'Viaefdeo Adaaas'
+                        },
+                        {
+                          value: 300,
+                          name: 'Vidssseo Aeeeds'
+                        },
+                        {
+                          value: 300,
+                          name: 'Vidqwereo Adsqwe'
+                        }
+                      ],
+                      emphasis: {
+                        itemStyle: {
+                          shadowBlur: 10,
+                          shadowOffsetX: 0,
+                          shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                      }
+                    }]
+                  });
+                });
+              </script>
+              <!-- End Pie Chart -->
 
             </div>
-          </div><!-- End Website Traffic -->  
+
+          </div><!-- End Website Traffic -->
+          
+          
         </div><!-- End Right side columns -->
 
       </div>

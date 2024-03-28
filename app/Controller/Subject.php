@@ -68,7 +68,6 @@ class Subject {
         $query = 'inner join classes c on c.class_id = s.class_id
         inner join users u on s.teacher_id = u.user_id';
 
-        $classesData = $this->classModel->getData();           
         $subjectData = $this->subjectModel->getData(['subject_id'=>$data['id']],[],[],false,$query);
         $teachersData = $this->userModel->getData(['role_name'=>'teacher']);
 
@@ -79,7 +78,7 @@ class Subject {
         }
 
 
-        return view('subject/subject_update',['classesData'=>$classesData,'subjectData'=>$subjectData,'teachersData'=>$teachersData]);
+        return view('subject/subject_update',['subjectData'=>$subjectData,'teachersData'=>$teachersData]);
     }
 
 

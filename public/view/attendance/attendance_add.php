@@ -19,15 +19,17 @@
             <div class="tab-pane fade show active profile-edit pt-3" id="profile-edit">
 
               <!-- Profile Edit Form -->
-              <form action="/attendance/insert?student_id=<?=$data['student_id']?>&subject_id=<?=$data['subject_id']?>" method="post" enctype="multipart/form-data">
+              <form action="/attendance/insert?subject_id=<?= $data['subject_id'] ?>" method="POST">
 
                 <div class="row mb-3">
                     <label class="col-md-4 col-lg-3 col-form-label">Attendance</label>
-                    <div class="col-md-8 col-lg-9">
-                        <select name='attendance' class="form-select <?php echo isset($params['validation']) && $params['validation']->hasError('class_id') ? ' is-invalid' : ' ';  ?>" id="floatingSelect">
-                            <option selected value=1 >Missing</option>
-                                <option value=0 >In Class</option>
-                        </select>
+                    <div class="col-lg-9">
+                        <div id="students_input" class="form-control d-flex flex-row-reverse" style="height: 41px;"><i class="bi bi-caret-down-fill pb-5"></i></div>
+                        <div id='students_checkbox' style="display:none; padding-left: 15px; border-style: none solid solid; border-width: thin; border-color: rgb(214, 214, 214); background-color: rgb(249, 249, 249); overflow-y: auto; height: 80px;">
+                        <?php foreach($studentsData as $studentData): ?>
+                          <input type="checkbox" name="checkbox[]" value="<?= $studentData->user_id ?>"><?php echo $studentData->name . ' ' . $studentData->surename ?></input><br>
+                        <?php endforeach; ?> 
+                        </div>
                         <div class="invalid-feedback">
                             <?php echo isset($params['validation']) ? $params['validation']->getFirstError('class_id') : ' '?>
                         </div>
@@ -78,4 +80,10 @@
         endDate: "today"      
       });
     });
-  </script>
+
+    $(document).ready(function(){
+      $("#students_input").click(function(){
+        $("#students_checkbox").slideToggle("slow");
+      });
+    });
+</script>

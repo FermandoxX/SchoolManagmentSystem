@@ -17,13 +17,15 @@ class Validation {
     public const RULE_PHONENUMBER = 'phone_number';
     public const RULE_IMAGE = 'image';
     public const RULE_GRADES = 'grades';
+    public const RULE_DATE = 'date';
+    // public const RULE_ISSET = 'isset';
     public array $errors = [];
 
 
       public function validate($data, $rule, $model = null,$id = null){
         foreach($rule as $attribute => $rules){
           $value = isset($data[$attribute]) ? $data[$attribute] : true;
-  
+
           if($value === true){
             continue;
           }
@@ -93,6 +95,10 @@ class Validation {
               $this->addErrorForRule($attribute,self::RULE_GRADES);
             }
 
+            if($ruleName === self::RULE_DATE && strtotime(date('m/d/Y')) < strtotime($value)){
+              $this->addErrorForRule($attribute,self::RULE_DATE);
+            }
+
           } 
         }
         return empty($this->errors);
@@ -136,7 +142,8 @@ class Validation {
             self::RULE_VALID => 'Record with this {field} already exists',
             self::RULE_PHONENUMBER => 'Invalid phone number',
             self::RULE_IMAGE => 'Unsupported file format. Please upload a photo in either .jpg, .jpeg, or .png format.',
-            self::RULE_GRADES => 'Grades need to be between 4 and 10'
+            self::RULE_GRADES => 'Grades need to be between 4 and 10',
+            self::RULE_DATE => 'Date cannot be higher than today'
         ];
       }
       

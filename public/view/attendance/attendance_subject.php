@@ -9,9 +9,10 @@
           <div class="card w-100">
             <div class="card-body">
               <div class="d-flex">
-                <h3 class="mt-3 mr-5 card-title col-9">Attendance</h3>
+                <h3 class="mt-3 mr-5 card-title col-7">Attendance</h3>
                 <?php if(isTeacher() || isAdmin()): ?>
-                <a class="createButton btn btn-primary text-white mt-4 ml-5 col-2" href="/attendance/students?subject_id=<?=$data['subject_id']?>"  style="height:40px; display: flex; justify-content: center; align-items: center; margin-left: 50px;"><?=isAdmin() ? "Delete Attendance" :"Take Attendance"?></a>
+                <a class="createButton btn btn-primary text-white mt-4 col-2" href="/attendance/remove?subject_id=<?=$data['subject_id']?>"  style="height:40px; display: flex; justify-content: center; align-items: center; margin-left: 50px;">Delete Attendance</a>
+                <a class="createButton btn btn-primary text-white mt-4 col-2" href="/attendance/add?subject_id=<?=$data['subject_id']?>"  style="height:40px; display: flex; justify-content: center; align-items: center; margin-left: 50px;">Take Attendance</a>
                 <?php endif; ?>
 
               </div>
@@ -47,7 +48,7 @@
                             <?php echo isset($params['validation']) ? $params['validation']->getFirstError('month') : ' '?>
                         </div>
                     </div>
-                    
+
                     <?php if(isAdmin() || isTeacher()): ?>
                     <div class="form-floating w-25">
                         <select name='student_id' class="form-select" id="floatingSelect">
@@ -68,43 +69,31 @@
                         <thead>
                             <tr>
                                 <th scope="col">Students</th>
-                                <?php for($i = 1; $i <= $day; $i++): ?>
-                                    <th scope="col"><?=$i?></th>
-                                <?php endfor; ?>
+                                <?php foreach($days as $day): ?>
+                                    <th scope="col"><?=$day?></th>
+                                <?php endforeach; ?>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($attendancesStudent as $key => $values): ?>
+                            <?php foreach($attendancesStudent as $key => $values):?>
                                 <tr>
                                     <th scope="row" style="width: 88px;"><?=$key?></th>
-                                    <?php for($i = 1; $i <= $day; $i++): ?>
-                                        <?php $present = false; $attendance = null;?>
-                                    
-                                        <?php foreach($values as $value): ?>
-                                        
-                                            <?php if($i == $value['attendance_date']): ?>
-                                                <?php $present = true; $attendance = $value['attendance'];?>
-                                                <?php break; ?>
-                                            
+                                    <?php foreach($days as $day): ?>
+                                        <?php $present = false;?>
+
+                                        <?php if(in_array((int)$day,$values)): ?>
+                                                <?php $present = true;?>
+                                                
                                             <?php endif; ?>
                                             
-                                        <?php endforeach; ?>
-                                            
-                                        <?php if($present && $attendance == 1): ?>
-                                          <td><?= '<i class="bi bi-bookmark-x-fill text-danger"></i>' ?></td>
-                                        <?php elseif($present && $attendance == 0): ?>
-                                          <td><?= '<i class="bi bi-bookmark-check-fill text-success"></i>' ?></td>
-                                        <?php else: ?>  
-                                          <td><?=''?></td>
-                                        <?php endif; ?>
+                                          <td><?= $present ? '<i class="bi bi-bookmark-x-fill text-danger"></i>' : '' ?></td>
                                         
-                                    <?php endfor; ?>
+                                    <?php endforeach; ?>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                <?php endif; ?>
-
+                <?php endif;?>
 
               </div>        
             </div>
